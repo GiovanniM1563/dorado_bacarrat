@@ -19,7 +19,7 @@ The values of the two initial cards for both the player and the banker are total
 If either the player or the banker has a total value of 8 or 9 with their two initial cards, this is called a "Natural", and no more cards are drawn.
 If neither the player nor the banker has a "Natural", additional cards may be drawn based on specific rules.
 
-### When the Player Does Not Draw a Third Card:
+### Player Does Not Draw a Third Card:
     If the player's total hand value after the initial two cards is 6 or 7, the player stands (does not draw a third card).
     If the player's total hand value is 0 to 5, the player draws a third card.
 
