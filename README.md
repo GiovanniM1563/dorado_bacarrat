@@ -32,10 +32,13 @@ If the player draws a third card, the banker's decision to draw or stand is base
 
 If the banker's total hand value is 3:
     The banker draws a third card unless the player's third card is an 8.
+
 If the banker's total hand value is 4:
     The banker draws a third card if the player's third card is 2 to 7.   
+
 If the banker's total hand value is 5:
     The banker draws a third card if the player's third card is 4 to 7.
+    
 If the banker's total hand value is 6:
     The banker draws a third card if the player's third card is 6 or 7.
 
