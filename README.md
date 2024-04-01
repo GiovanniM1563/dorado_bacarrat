@@ -20,23 +20,24 @@ If either the player or the banker has a total value of 8 or 9 with their two in
 If neither the player nor the banker has a "Natural", additional cards may be drawn based on specific rules.
 
 ### Player Does Not Draw a Third Card:
-    If the player's total hand value after the initial two cards is 6 or 7, the player stands (does not draw a third card).
-    If the player's total hand value is 0 to 5, the player draws a third card.
+If the player's total hand value after the initial two cards is 6 or 7, the player stands (does not draw a third card).
+If the player's total hand value is 0 to 5, the player draws a third card.
 
 ### Banker's Initial Hand:
-    If the banker's total hand value after the initial two cards is 7, the banker stands (does not draw a third card).
-    If the banker's total hand value is 0 to 2, the banker always draws a third card.
+If the banker's total hand value after the initial two cards is 7, the banker stands (does not draw a third card).
+If the banker's total hand value is 0 to 2, the banker always draws a third card.
 
 ### Banker's Decision to Draw a Third Card:
-    If the player draws a third card, the banker's decision to draw or stand is based on the following rules:
-        If the banker's total hand value is 3:
-            The banker draws a third card unless the player's third card is an 8.
-        If the banker's total hand value is 4:
-            The banker draws a third card if the player's third card is 2 to 7.   
-        If the banker's total hand value is 5:
-            The banker draws a third card if the player's third card is 4 to 7.
-        If the banker's total hand value is 6:
-            The banker draws a third card if the player's third card is 6 or 7.
+If the player draws a third card, the banker's decision to draw or stand is based on the following rules:
+
+If the banker's total hand value is 3:
+    The banker draws a third card unless the player's third card is an 8.
+If the banker's total hand value is 4:
+    The banker draws a third card if the player's third card is 2 to 7.   
+If the banker's total hand value is 5:
+    The banker draws a third card if the player's third card is 4 to 7.
+If the banker's total hand value is 6:
+    The banker draws a third card if the player's third card is 6 or 7.
 
 Once all cards have been dealt, the values of the player's and banker's hands are compared.
 
