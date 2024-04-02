@@ -224,6 +224,10 @@ if __name__ == "__main__":
     st.sidebar.text("Click the button to Play / Deal")
 
      # Add a "Play Again" button for Baccarat
+    
+     # Set page configuration to prevent sidebar collapse on smaller screens
+    st.set_page_config(collapse_sidebar=False)
+
     if st.sidebar.button("Baccarat"):
     
         st.title("Baccarat")
