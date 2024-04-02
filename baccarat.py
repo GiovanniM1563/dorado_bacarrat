@@ -57,7 +57,7 @@ def display_card_icon(card):
     if color == 'red':
         return f'<span style="color:red;">{card}</span>'
     else:
-        return f'<span style="color:black;">{card}</span>'
+        return f'<span style="color:black;   text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">{card}</span>'
     
 # Function to display card icon with image
 # def display_card_icon(card):
@@ -225,11 +225,8 @@ if __name__ == "__main__":
 
      # Add a "Play Again" button for Baccarat
     
-     # Set page configuration to prevent sidebar collapse on smaller screens
-    # st.set_page_config(collapse_sidebar=False)
-
     if st.sidebar.button("Baccarat"):
-    
+   
         st.title("Baccarat")
         st.write("##### Total Decks : 8")
         st.write("###### With No Replacement - dealt cards are not placing back to the shuffler")
