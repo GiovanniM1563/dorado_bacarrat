@@ -132,9 +132,9 @@ def play_baccarat():
     if player_natural or banker_natural:
         col1, col2 = st.columns(2)
         with col1:
-            st.write("##### Player's Cards: ", *[display_card_icon(card) for card in player_hand], unsafe_allow_html=True)
+            st.write("##### Player's Cards : ", *[display_card_icon(card) for card in player_hand], unsafe_allow_html=True)
         with col2:
-            st.write("##### Banker's Cards: ",  *[display_card_icon(card) for card in banker_hand], unsafe_allow_html=True)
+            st.write("##### Banker's Cards : ",  *[display_card_icon(card) for card in banker_hand], unsafe_allow_html=True)
         
         if player_natural > banker_natural:
             st.write("###### Player Wins :  Natural ", player_hand_value,"Over ", banker_hand_value)
@@ -188,9 +188,9 @@ def play_baccarat():
 
     col1, col2 = st.columns(2)
     with col1:
-        st.write("##### Player's Cards: ", *[display_card_icon(card) for card in player_hand], unsafe_allow_html=True)
+        st.write("##### Player's Cards : ", *[display_card_icon(card) for card in player_hand], unsafe_allow_html=True)
     with col2:
-        st.write("##### Banker's Cards: ", *[display_card_icon(card) for card in banker_hand], unsafe_allow_html=True)
+        st.write("##### Banker's Cards : ", *[display_card_icon(card) for card in banker_hand], unsafe_allow_html=True)
 
     # Determine the winner based on hand values
 
@@ -229,7 +229,7 @@ if __name__ == "__main__":
    
         st.title("Baccarat")
         st.write("##### Total Decks : 8")
-        st.write("###### With No Replacement - dealt cards are not placing back to the shuffler")
+        st.write("###### Without Replacement - dealt cards are not placing back to the shuffler")
         st.empty()
 
         # Play a new game of Baccarat
