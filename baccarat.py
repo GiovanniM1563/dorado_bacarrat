@@ -55,9 +55,9 @@ def calculate_hand_value(hand):
 def display_card_icon(card):
     value, color = card_values[card]
     if color == 'red':
-        return f'<span style="color:red;">{card}</span>'
+        return f'<span style="color:red; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">{card}</span>'
     else:
-        return f'<span style="color:black;   text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">{card}</span>'
+        return f'<span style="color:black;  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">{card}</span>'
     
 # Function to display card icon with image
 # def display_card_icon(card):
