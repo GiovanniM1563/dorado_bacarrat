@@ -273,9 +273,9 @@ if player_wins_history and banker_wins_history and ties_history:
     total_count = df['Count'].sum()
     df['Percentage'] = round((df['Count'] / total_count) * 100, 2)
 
-    # Add a row for total count and percentage
-    total_row = {'Count': total_count, 'Percentage': 100}
-    df = df.append(pd.Series(total_row, name='Total'))
+    # # Add a row for total count and percentage
+    # total_row = {'Count': total_count, 'Percentage': 100}
+    # df = df.append(pd.Series(total_row, name='Total'))
     
     with col2:
     # Display the updated DataFrame in Streamlit
