@@ -42,10 +42,6 @@ def deal_card():
     return deck.pop()
 
 
-# # Function to deal a card
-# def deal_card():
-#     return random.choice(list(card_values.keys()))
-
 # Function to calculate hand value
 def calculate_hand_value(hand):
     value = sum(card_values[card][0] for card in hand) % 10
@@ -63,7 +59,6 @@ def display_card_icon(card):
 # def display_card_icon(card):
 #     value, image_path = card_values[card]
 #     return f'<img src="{image_path}.png" alt="{card}" width="100" height="150">'
-
 
 # Function to record game results as (game_results.csv) data file
 def record_game_result(player_hand, banker_hand, result):
@@ -137,16 +132,16 @@ def play_baccarat():
             st.write("##### Banker's Cards : ",  *[display_card_icon(card) for card in banker_hand], unsafe_allow_html=True)
         
         if player_natural > banker_natural:
-            st.write("###### Player Wins :  Natural ", player_hand_value,"Over ", banker_hand_value)
+            st.markdown("###### Player Wins : </span> Natural <span style='font-size: 24px; color: blue;'> " + str(player_hand_value) + "</span> Over </span> <span style='font-size: 24px; color: orange;'> " + str(banker_hand_value) + "</span>", unsafe_allow_html=True)
             player_wins += 1
             record_game_result(player_hand, banker_hand, 'P')
             
         elif player_natural < banker_natural:
-            st.write("###### Banker Wins :  Natural ", banker_hand_value, "Over ", player_hand_value)
+            st.markdown("###### Banker Wins : </span> Natural <span style='font-size: 24px; color: orange;'> " + str(banker_hand_value) + "</span> Over  </span><span style='font-size: 24px; color: blue;'> " + str(player_hand_value) + "</span>", unsafe_allow_html=True)
             banker_wins += 1
             record_game_result(player_hand, banker_hand, 'B')
         else:
-            st.write("###### It's a Natural Tie ! ", player_hand_value, "and ", banker_hand_value)
+            st.markdown("###### It's a Natural Tie ! </span> <span style='font-size: 24px; color: green;'> " + str(player_hand_value) + "</span> & </span> <span style='font-size: 24px; color: green;'> " + str(banker_hand_value) + "</span>", unsafe_allow_html=True)
             ties += 1
             record_game_result(player_hand, banker_hand, 'T')
         
@@ -195,17 +190,17 @@ def play_baccarat():
     # Determine the winner based on hand values
 
     if player_hand_value > banker_hand_value:
-        st.write("###### Player Wins ", player_hand_value, "over ", banker_hand_value)
+        st.markdown("###### Player Wins : </span> <span style='font-size: 24px; color: blue;'> " + str(player_hand_value) + "</span> Over </span> <span style='font-size: 24px; color: orange;'> " + str(banker_hand_value) + "</span>", unsafe_allow_html=True)
         player_wins += 1
         record_game_result(player_hand, banker_hand, 'P')
 
     elif player_hand_value < banker_hand_value:
-        st.write("###### Banker Wins ", banker_hand_value, "over ", player_hand_value)
+        st.markdown("###### Banker Wins : </span> <span style='font-size: 24px; color: orange;'> " + str(banker_hand_value) + "</span> Over  </span><span style='font-size: 24px; color: blue;'> " + str(player_hand_value) + "</span>", unsafe_allow_html=True)
         banker_wins += 1        
         record_game_result(player_hand, banker_hand, 'B')
 
     else:
-        st.write("###### It's a Tie ! ", player_hand_value, "and ", banker_hand_value)
+        st.markdown("###### It's a Tie ! </span> <span style='font-size: 24px; color: green;'> " + str(player_hand_value) + "</span> & </span> <span style='font-size: 24px; color: green;'> " + str(banker_hand_value) + "</span>", unsafe_allow_html=True)
         ties += 1
         record_game_result(player_hand, banker_hand, 'T')
 
@@ -220,73 +215,83 @@ def play_baccarat():
 
 # Run the app
 if __name__ == "__main__":
+
+    # Initialize session state
+    if 'player_wins' not in st.session_state:
+        st.session_state.player_wins = 0
+        st.session_state.banker_wins = 0
+        st.session_state.ties = 0
+
     st.sidebar.title("Casino Games")
     st.sidebar.text("Click the button to Play / Deal")
 
-     # Add a "Play Again" button for Baccarat
-    
+    # Add a "Play Again" button for Baccarat
     if st.sidebar.button("Baccarat"):
-   
         st.title("Baccarat")
-        st.write("##### Total Decks : 8")
+
+    # Move the "Play/Deal" button here
+    if st.button("Play/Deal"):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("##### Baccarat")
+        with col2:
+            st.write("###### Total Decks : 8")
+
         st.write("###### Without Replacement - dealt cards are not placing back to the shuffler")
         st.empty()
-
         # Play a new game of Baccarat
         player_wins, banker_wins, ties = play_baccarat()
         st.session_state.player_wins = player_wins
         st.session_state.banker_wins = banker_wins
         st.session_state.ties = ties
 
+    # Check if the lists are not empty before accessing the last element
+    if st.session_state.player_wins != 0 or st.session_state.banker_wins != 0 or st.session_state.ties != 0:
+        # Combine the data into a DataFrame
+        data = {
+            "Results": ["Player", "Banker", "Tie"],
+            "Count": [st.session_state.player_wins, st.session_state.banker_wins, st.session_state.ties]
+        }
 
-# Check if the lists are not empty before accessing the last element
-if player_wins_history and banker_wins_history and ties_history:
-    # Combine the data into a DataFrame
-    data = {
-        "Results": ["Player", "Banker", "Tie"],
-        "Count": [player_wins_history[-1], banker_wins_history[-1], ties_history[-1]]
-    }
+        df = pd.DataFrame(data)
 
-    df = pd.DataFrame(data)
+        # Set the "Result" column as index
+        df.set_index("Results", inplace=True)
 
-    # Set the "Result" column as index
-    df.set_index("Results", inplace=True)
+        col1, col2 = st.columns(2)
+        with col1:
+            if not df.empty:
+                # Define CSS style for the box
+                box_style = """
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    padding: 20px;
+                    margin: 20px 0;
+                """
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if not df.empty:
-            # Define CSS style for the box
-            box_style = """
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding: 20px;
-                margin: 20px 0;
-            """
+                # Render the box with the chart inside
+                with st.container():
+                    st.write("###### Results Chart: ")  # Title inside the box
+                    st.bar_chart(df)  # Chart inside the box
+            else:
+                st.write("No game history yet.")
 
-            # Render the box with the chart inside
-            with st.container(): 
-                st.write("##### Game Results: ")  # Title inside the box
-                st.bar_chart(df)  # Chart inside the box
-        else:
-            st.write("No game history yet.")
-    
-    # Calculate total count and percentage
-    total_count = df['Count'].sum()
-    df['Percentage'] = round((df['Count'] / total_count) * 100, 2)
+        # Calculate total count and percentage
+        total_count = df['Count'].sum()
+        df['Percentage'] = round((df['Count'] / total_count) * 100, 2)
 
-    # # Add a row for total count and percentage
-    # total_row = {'Count': total_count, 'Percentage': 100}
-    # df = df.append(pd.Series(total_row, name='Total'))
-    
-    with col2:
-    # Display the updated DataFrame in Streamlit
-        st.write(df)
-        # Download the number of win/loss or ties (Player, Banker, Tie )
-        csv = df.to_csv(index = True).encode('utf-8')
-        st.download_button('Results download', data = csv, file_name = "baccarat_output.csv",mime = "text/csv")
+        with col2:
+            st.write("###### Results Sumary")
+            # Display the updated DataFrame in Streamlit
+            st.write(df)
 
-else:
-    st.write("No game history yet.")
+            # Download the number of win/loss or ties (Player, Banker, Tie )
+            # csv = df.to_csv(index=True).encode('utf-8')
+            # st.download_button('Results download', data=csv, file_name="baccarat_output.csv", mime="text/csv")
+
+    else:
+        st.write("No game history yet.")
+
 
 # Read the CSV file into a DataFrame
 df_game_results = pd.read_csv('game_results.csv')
