@@ -15,7 +15,7 @@ def set_background_image():
         """
         <style>
         body {
-            background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/8717957e-7245-47c0-4b90-01043e6b3700/public");
+            background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/7cb8ff65-ae67-4523-8800-108f7dde7500/public");
             background-size: cover;
             background-position: center;
         }
