@@ -9,13 +9,18 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Apply custom background color for a casino feel
-def set_background_color():
+# Apply custom background color and watermark
+def set_background_style():
     st.markdown(
         """
         <style>
         .stApp {
             background-color: #006400;
+            background-image: url('el_dorado.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 40%;
+            opacity: 0.2;
         }
         .stButton>button {
             background-color: gold;
@@ -31,7 +36,7 @@ def set_background_color():
         """,
         unsafe_allow_html=True
     )
-set_background_color()
+set_background_style()
 
 # Define card values and colors
 card_values = {
@@ -84,18 +89,18 @@ def play_baccarat():
     # Reveal Player's first and second cards
     sleep(4)
     announcement = st.empty()
-    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer drew Player's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer drew Player's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     
     # Reveal Banker's first and second cards
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer drew Banker's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer drew Banker's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     sleep(3)
     
@@ -134,6 +139,6 @@ def play_baccarat():
     
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>An Exclusive feature of the El Dorado Lounge.</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>An Exclusive future of the El Dorado Lounge.</p>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
     play_baccarat()
