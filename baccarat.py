@@ -9,6 +9,20 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide")
 
+# Apply custom background color for a casino feel
+def set_background_color():
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #006400;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+set_background_color()
+
 # Define card values and colors
 card_values = {
     **{f'{rank}{suit}': (0 if rank in 'JQK10' else 1 if rank == 'A' else int(rank), 'black' if suit in '♠♣' else 'red')
@@ -59,7 +73,14 @@ def play_baccarat():
     st.markdown("""
         <h3 style='text-align: center;'>🃏 Dealing Cards... 🎴</h3>
     """, unsafe_allow_html=True)
-    sleep(1)
+    
+    # Add a loading bar for anticipation
+    progress_bar = st.progress(0)
+    for i in range(100):
+        sleep(0.02)
+        progress_bar.progress(i + 1)
+    sleep(0.5)
+    progress_bar.empty()
     
     # Display player and banker hands visually
     col1, col2 = st.columns(2)
