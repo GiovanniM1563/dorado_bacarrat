@@ -11,29 +11,22 @@ from time import sleep
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
 # Function to set sidebar background image
-def sidebar_bg(side_bg):
-    side_bg_ext = 'png'
-    try:
-        with open(side_bg, "rb") as image_file:
-            encoded_string = base64.b64encode(image_file.read()).decode()
-        st.markdown(
-            f"""
-            <style>
-            [data-testid="stSidebar"] > div:first-child {{
-                background: url(data:image/{side_bg_ext};base64,{encoded_string});
-                background-size: cover;
-                background-position: center;
-            }}
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-    except FileNotFoundError:
-        st.sidebar.warning("Sidebar background image not found!")
+def sidebar_bg():
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebar"] > div:first-child {
+            background: url("https://i.ibb.co/NdzqDbBZ") !important;
+            background-size: cover;
+            background-position: center;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Set sidebar background
-side_bg = 'EL_DORADO-bck.png'
-sidebar_bg(side_bg)
+sidebar_bg()
 
 # Define card values and colors
 card_values = {
