@@ -13,17 +13,23 @@ st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide"
 # Function to set sidebar background image
 def sidebar_bg(side_bg):
     side_bg_ext = 'png'
-    st.markdown(
-        f"""
-        <style>
-        [data-testid="stSidebar"] > div:first-child {{
-            background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
-            background-size: cover;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    try:
+        with open(side_bg, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+        st.markdown(
+            f"""
+            <style>
+            [data-testid="stSidebar"] > div:first-child {{
+                background: url(data:image/{side_bg_ext};base64,{encoded_string});
+                background-size: cover;
+                background-position: center;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+    except FileNotFoundError:
+        st.sidebar.warning("Sidebar background image not found!")
 
 # Set sidebar background
 side_bg = 'EL_DORADO-bck.png'
