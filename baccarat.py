@@ -88,7 +88,8 @@ def play_baccarat():
     # Reveal Player's first and second cards
     for i in range(2):
         sleep(5)
- nd.append(deal_card())
+        announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's card {i+1}...</h3>", unsafe_allow_html=True)
+        player_hand.append(deal_card())
         sleep(5)
         announcement.empty()
         with col1:
