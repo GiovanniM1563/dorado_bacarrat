@@ -68,28 +68,32 @@ def play_baccarat():
     
     # Reveal Player's first card
     sleep(3)
+    st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(2)
+    sleep(3)
     
     # Reveal Banker's first card
+    st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     with col2:
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's First Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(1)
+    sleep(3)
     
     # Reveal Player's second card
+    st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's Second Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(1)
+    sleep(3)
     
     # Reveal Banker's second card
+    st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     with col2:
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(1)
+    sleep(3)
     
     player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
     
@@ -99,7 +103,7 @@ def play_baccarat():
     player_draws = banker_draws = False
     if not player_natural and not banker_natural:
         if player_value < 6:
-            st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card... 🎴</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
             sleep(3.5)
             player_hand.append(deal_card())
             with col1:
@@ -109,40 +113,28 @@ def play_baccarat():
         
         third_card_value = card_values[player_hand[-1]][0] if player_draws else None
         if banker_value < 3 or (banker_value == 3 and third_card_value != 8) or (banker_value == 4 and third_card_value in [2, 3, 4, 5, 6, 7]) or (banker_value == 5 and third_card_value in [4, 5, 6, 7]) or (banker_value == 6 and third_card_value in [6, 7]):
-            st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card... 🎴</h3>", unsafe_allow_html=True)
-            sleep(2.5)
+            st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+            sleep(3.5)
             banker_hand.append(deal_card())
             with col2:
                 st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
             banker_value = calculate_hand_value(banker_hand)
             banker_draws = True
     
-    sleep(1)
+    sleep(3)
     
-    # Determine the winner
+    # Final Outcome Display with Fanfare
+    st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])} - {player_value}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])} - {banker_value}</h3>", unsafe_allow_html=True)
+    
     winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
     result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
     
-    st.markdown(f"""
-        <h3 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! ({player_value} - {banker_value}) 🎉</h3>
-    """, unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! 🎉</h1>", unsafe_allow_html=True)
     
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Click below to deal a hand.</p>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
     play_baccarat()
-
-# Sidebar Information
-st.sidebar.title("📊 Game Information")
-st.sidebar.write("🔢 Number of Decks: 8")
-st.sidebar.write("🎲 Game Odds:")
-st.sidebar.write("- Player Win: ~44.62%")
-st.sidebar.write("- Banker Win: ~45.86%")
-st.sidebar.write("- Tie: ~9.52%")
-st.sidebar.write("\n**📜 Baccarat Rules:**")
-st.sidebar.write("- The goal is to get a hand closest to 9.")
-st.sidebar.write("- Face cards and 10s are worth 0, Aces are worth 1.")
-st.sidebar.write("- If the total is over 9, only the last digit counts.")
-st.sidebar.write("- Player draws a third card if their total is 0-5.")
-st.sidebar.write("- Banker draws based on Player's third card and their total.")
