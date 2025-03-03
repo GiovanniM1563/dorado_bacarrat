@@ -9,13 +9,16 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Apply custom background color for a casino feel
-def set_background_color():
+# Apply custom background color and font styling
+def set_custom_styles():
     st.markdown(
         """
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Silverflake&display=swap');
+        
         .stApp {
             background-color: #006400;
+            font-family: 'Silverflake', sans-serif;
         }
         .stButton>button {
             background-color: gold;
@@ -23,15 +26,17 @@ def set_background_color():
             font-size: 18px;
             border-radius: 10px;
             padding: 10px 20px;
+            font-family: 'Silverflake', sans-serif;
         }
-        .stMarkdown {
-            text-align: center;
+        .stMarkdown, h1, h2, h3, h4, h5, h6, p {
+            font-family: 'Silverflake', sans-serif;
+            color: white;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
-set_background_color()
+set_custom_styles()
 
 # Define card values and colors
 card_values = {
@@ -56,7 +61,7 @@ def calculate_hand_value(hand):
 
 def display_card_icon(card):
     value, color = card_values[card]
-    return f'<span style="color:{color}; font-size:28px;">{card}</span>'
+    return f'<span style="color:{color}; font-size:28px; font-family: Silverflake;">{card}</span>'
 
 # Sidebar Information
 st.sidebar.title("📜 Baccarat Rules & Odds")
