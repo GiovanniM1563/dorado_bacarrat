@@ -2,6 +2,7 @@ import os
 import random
 import csv
 import html
+import base64
 import streamlit as st
 import pandas as pd
 from time import sleep
@@ -9,31 +10,24 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Apply custom background image
-def set_background_image():
+# Function to set sidebar background image
+def sidebar_bg(side_bg):
+    side_bg_ext = 'png'
     st.markdown(
-        """
+        f"""
         <style>
-        body {
-            background-image: url("https://www.canva.com/design/DAGgpoWNy2s/nLtPQ-Umht3k3JedesgQ3w/view?utm_content=DAGgpoWNy2s&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h2918767e8e");
+        [data-testid="stSidebar"] > div:first-child {{
+            background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
             background-size: cover;
-            background-position: center;
-        }
-        .stButton>button {
-            background-color: gold;
-            color: black;
-            font-size: 18px;
-            border-radius: 10px;
-            padding: 10px 20px;
-        }
-        .stMarkdown {
-            text-align: center;
-        }
+        }}
         </style>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
-set_background_image()
+
+# Set sidebar background
+side_bg = 'EL_DORADO-bck.png'
+sidebar_bg(side_bg)
 
 # Define card values and colors
 card_values = {
@@ -64,71 +58,67 @@ def play_baccarat():
     global deck
     player_hand, banker_hand = [], []
     
-    st.markdown("<h3 style='text-align: center; color: gold;'>🃏 Dealing Cards... 🎴</h3>", unsafe_allow_html=True)
+    announcement = st.empty()
+    announcement.markdown("<h3 style='text-align: center; color: gold;'>🃏 Dealing Cards... 🎴</h3>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     # Reveal Player's first card
     sleep(3)
-    st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
+    sleep(3)
+    announcement.empty()
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
     
     # Reveal Banker's first card
-    st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
+    sleep(3)
+    announcement.empty()
     with col2:
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's First Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
     
     # Reveal Player's second card
-    st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
+    sleep(3)
+    announcement.empty()
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's Second Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
     
     # Reveal Banker's second card
-    st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
+    sleep(3)
+    announcement.empty()
     with col2:
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
     
-    player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
+    # Implement third card rule
+    player_value = calculate_hand_value(player_hand)
+    banker_value = calculate_hand_value(banker_hand)
+    if player_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        announcement.empty()
+        player_hand.append(deal_card())
+        with col1:
+            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
     
-    player_natural, banker_natural = player_value in [8, 9], banker_value in [8, 9]
-    
-    # Implement the third card rule
-    player_draws = banker_draws = False
-    if not player_natural and not banker_natural:
-        if player_value < 6:
-            st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
-            sleep(3.5)
-            player_hand.append(deal_card())
-            with col1:
-                st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-            player_value = calculate_hand_value(player_hand)
-            player_draws = True
-        
-        third_card_value = card_values[player_hand[-1]][0] if player_draws else None
-        if banker_value < 3 or (banker_value == 3 and third_card_value != 8) or (banker_value == 4 and third_card_value in [2, 3, 4, 5, 6, 7]) or (banker_value == 5 and third_card_value in [4, 5, 6, 7]) or (banker_value == 6 and third_card_value in [6, 7]):
-            st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
-            sleep(3.5)
-            banker_hand.append(deal_card())
-            with col2:
-                st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-            banker_value = calculate_hand_value(banker_hand)
-            banker_draws = True
-    
-    sleep(3)
+    if banker_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        announcement.empty()
+        banker_hand.append(deal_card())
+        with col2:
+            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     
     # Final Outcome Display with Fanfare
     st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])} - {player_value}</h3>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])} - {banker_value}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])}</h3>", unsafe_allow_html=True)
     
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
