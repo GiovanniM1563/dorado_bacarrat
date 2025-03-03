@@ -7,7 +7,7 @@ import pandas as pd
 from time import sleep
 
 # Page Configuration
-st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide")
+st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
 # Apply custom background color for a casino feel
 def set_background_color():
@@ -92,9 +92,16 @@ def play_baccarat():
         <h3 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! ({player_value} - {banker_value}) 🎉</h3>
     """, unsafe_allow_html=True)
     
-# Sidebar controls
-st.sidebar.title("🎰 Casino Games")
-st.sidebar.text("Click to Play Baccarat")
-if st.sidebar.button("Play Baccarat 🎲"):
-    st.title("Baccarat - Live Game")
+# Main Page Deal Button
+st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Click below to deal a hand.</p>", unsafe_allow_html=True)
+if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
     play_baccarat()
+
+# Sidebar Information
+st.sidebar.title("📊 Game Information")
+st.sidebar.write("🔢 Number of Decks: 8")
+st.sidebar.write("🎲 Game Odds:")
+st.sidebar.write("- Player Win: ~44.62%")
+st.sidebar.write("- Banker Win: ~45.86%")
+st.sidebar.write("- Tie: ~9.52%")
