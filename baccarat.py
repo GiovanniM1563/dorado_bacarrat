@@ -10,23 +10,31 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Function to set sidebar background image
-def sidebar_bg():
+# Function to set page background color
+def set_background_color():
     st.markdown(
         """
         <style>
-        [data-testid="stSidebar"] > div:first-child {
-            background: url("https://i.ibb.co/NdzqDbBZ") !important;
-            background-size: cover;
-            background-position: center;
+        .stApp {
+            background-color: #228B22; /* Felt green color */
+        }
+        .stButton>button {
+            background-color: gold;
+            color: black;
+            font-size: 18px;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+        .stMarkdown {
+            text-align: center;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-# Set sidebar background
-sidebar_bg()
+# Apply background color
+set_background_color()
 
 # Define card values and colors
 card_values = {
@@ -94,25 +102,6 @@ def play_baccarat():
     announcement.empty()
     with col2:
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    
-    # Implement third card rule
-    player_value = calculate_hand_value(player_hand)
-    banker_value = calculate_hand_value(banker_hand)
-    if player_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
-        sleep(3)
-        announcement.empty()
-        player_hand.append(deal_card())
-        with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    
-    if banker_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
-        sleep(3)
-        announcement.empty()
-        banker_hand.append(deal_card())
-        with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     
     # Final Outcome Display with Fanfare
     st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
