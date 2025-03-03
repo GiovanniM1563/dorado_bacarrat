@@ -49,7 +49,15 @@ st.sidebar.write("- The goal is to get a hand closest to 9.")
 st.sidebar.write("- Face cards and 10s are worth 0, Aces are worth 1.")
 st.sidebar.write("- If the total is over 9, only the last digit counts.")
 st.sidebar.write("- Player draws a third card if their total is 0-5.")
-st.sidebar.write("- Banker draws based on Player's third card and their total, following traditional rules.")
+st.sidebar.write("- Banker draws based on the player's third card and their total, following traditional rules:")
+st.sidebar.write("  - If the player stands (no third card), banker draws if total is less than 6.")
+st.sidebar.write("  - If the player draws a third card:")
+st.sidebar.write("    - Banker draws with a total of 0–2.")
+st.sidebar.write("    - Banker draws with a total of 3 unless the player's third card is an 8.")
+st.sidebar.write("    - Banker draws with a total of 4 if the player's third card is 2–7.")
+st.sidebar.write("    - Banker draws with a total of 5 if the player's third card is 4–7.")
+st.sidebar.write("    - Banker draws with a total of 6 if the player's third card is 6 or 7.")
+st.sidebar.write("    - Banker stands with a total of 7 or more.")
 
 # Define card values and colors
 card_values = {
