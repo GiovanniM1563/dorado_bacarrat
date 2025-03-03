@@ -81,38 +81,48 @@ def play_baccarat():
     
     col1, col2 = st.columns(2)
     
-    # Reveal Player's first card
+    # Reveal Player's first and second cards
     sleep(4)
     announcement = st.empty()
     announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
-    with col1:
-        st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
     sleep(3)
-    
-    # Reveal Banker's first card
-    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
-    banker_hand.append(deal_card())
-    with col2:
-        st.markdown(f"<h4 style='color:orange;'>🟠 Banker's First Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
-    
-    # Reveal Player's second card
     announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
-    with col1:
-        st.markdown(f"<h4 style='color:blue;'>🔵 Player's Second Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(3)
     
-    # Reveal Banker's second card
+    # Reveal Banker's first and second cards
+    sleep(3)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
+    banker_hand.append(deal_card())
+    sleep(3)
     announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
-    with col2:
-        st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     sleep(3)
     
+    # Determine if a third card is needed
+    player_value = calculate_hand_value(player_hand)
+    banker_value = calculate_hand_value(banker_hand)
+    
+    player_third_card = None
+    if player_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        player_third_card = deal_card()
+        player_hand.append(player_third_card)
+    
+    # Banker third card rules
+    if banker_value < 3 or (
+        banker_value == 3 and (player_third_card != '8')) or (
+        banker_value == 4 and (player_third_card in ['2', '3', '4', '5', '6', '7'])) or (
+        banker_value == 5 and (player_third_card in ['4', '5', '6', '7'])) or (
+        banker_value == 6 and (player_third_card in ['6', '7'])):
+        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        banker_hand.append(deal_card())
+    
     # Determine winner
-    player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
+    player_value = calculate_hand_value(player_hand)
+    banker_value = calculate_hand_value(banker_hand)
     winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
     result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
     
