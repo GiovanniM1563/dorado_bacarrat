@@ -98,7 +98,3 @@ st.sidebar.text("Click to Play Baccarat")
 if st.sidebar.button("Play Baccarat 🎲"):
     st.title("Baccarat - Live Game")
     play_baccarat()
-
-# Add Game Reset Button
-if st.button("🔄 Reset Game Stats"):
-    st.write("Game statistics have been reset!")
