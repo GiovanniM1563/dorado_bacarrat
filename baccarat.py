@@ -111,6 +111,22 @@ def play_baccarat():
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     sleep(3)
     
+    # Implement third card rule
+    player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
+    if player_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        player_hand.append(deal_card())
+        with col1:
+            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+    
+    if banker_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        banker_hand.append(deal_card())
+        with col2:
+            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+    
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>An Exclusive future of the El Dorado Lounge.</p>", unsafe_allow_html=True)
