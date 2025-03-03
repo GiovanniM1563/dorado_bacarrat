@@ -67,11 +67,11 @@ def play_baccarat():
     col1, col2 = st.columns(2)
     
     # Reveal Player's first card
-    sleep(2)
+    sleep(3)
     player_hand.append(deal_card())
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-    sleep(1)
+    sleep(2)
     
     # Reveal Banker's first card
     banker_hand.append(deal_card())
@@ -99,8 +99,8 @@ def play_baccarat():
     player_draws = banker_draws = False
     if not player_natural and not banker_natural:
         if player_value < 6:
-            st.markdown("<h4 style='text-align: center; color: blue;'>🔵 Player is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
-            sleep(2.5)
+            st.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card... 🎴</h3>", unsafe_allow_html=True)
+            sleep(3.5)
             player_hand.append(deal_card())
             with col1:
                 st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
@@ -109,8 +109,8 @@ def play_baccarat():
         
         third_card_value = card_values[player_hand[-1]][0] if player_draws else None
         if banker_value < 3 or (banker_value == 3 and third_card_value != 8) or (banker_value == 4 and third_card_value in [2, 3, 4, 5, 6, 7]) or (banker_value == 5 and third_card_value in [4, 5, 6, 7]) or (banker_value == 6 and third_card_value in [6, 7]):
-            st.markdown("<h4 style='text-align: center; color: orange;'>🟠 Banker is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
-            sleep(1.5)
+            st.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card... 🎴</h3>", unsafe_allow_html=True)
+            sleep(2.5)
             banker_hand.append(deal_card())
             with col2:
                 st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
