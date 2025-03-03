@@ -111,21 +111,16 @@ def play_baccarat():
         st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     sleep(3)
     
-    # Implement third card rule
+    # Determine winner
     player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
-    if player_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
-        sleep(3)
-        player_hand.append(deal_card())
-        with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+    winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
+    result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
     
-    if banker_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
-        sleep(3)
-        banker_hand.append(deal_card())
-        with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+    # Display final results with fanfare
+    st.markdown("<h2 style='text-align: center; color: gold;'>✨ Final Outcome ✨</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])} - {player_value}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])} - {banker_value}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! 🎉</h1>", unsafe_allow_html=True)
     
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
