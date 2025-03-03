@@ -67,7 +67,7 @@ def play_baccarat():
     col1, col2 = st.columns(2)
     
     # Reveal Player's first card
-    sleep(1)
+    sleep(2)
     player_hand.append(deal_card())
     with col1:
         st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
@@ -100,7 +100,7 @@ def play_baccarat():
     if not player_natural and not banker_natural:
         if player_value < 6:
             st.markdown("<h4 style='text-align: center; color: blue;'>🔵 Player is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
-            sleep(1.5)
+            sleep(2.5)
             player_hand.append(deal_card())
             with col1:
                 st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
