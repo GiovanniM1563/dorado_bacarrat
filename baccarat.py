@@ -84,18 +84,18 @@ def play_baccarat():
     # Reveal Player's first and second cards
     sleep(4)
     announcement = st.empty()
-    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer drew Player's first card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer drew Player's second card...</h3>", unsafe_allow_html=True)
     player_hand.append(deal_card())
     
     # Reveal Banker's first and second cards
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's first card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer drew Banker's first card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     sleep(3)
-    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
+    announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer drew Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     sleep(3)
     
