@@ -8,7 +8,7 @@ import pandas as pd
 from time import sleep
 
 # Page Configuration
-st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
 # Function to set page background color
 def set_background_color():
