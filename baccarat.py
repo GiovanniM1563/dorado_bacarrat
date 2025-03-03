@@ -10,6 +10,16 @@ from time import sleep
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
 # Apply custom background color for a casino feel
+page_bg_img = '''
+<style>
+body {
+background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/8717957e-7245-47c0-4b90-01043e6b3700/public");
+background-size: cover;
+}
+</style>
+'''
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
 def set_background_color():
     st.markdown(
         """
