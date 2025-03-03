@@ -84,6 +84,28 @@ def play_baccarat():
     with col2:
         st.markdown(f"<h4 style='color:orange; text-shadow: 2px 2px 4px black;'>Banker's Cards:</h4> {' '.join([display_card_icon(c) for c in banker_hand])}", unsafe_allow_html=True)
     
+    # Implement the third card rule
+    player_draws = banker_draws = False
+    if not player_natural and not banker_natural:
+        if player_value < 6:
+            player_hand.append(deal_card())
+            player_value = calculate_hand_value(player_hand)
+            player_draws = True
+        
+        third_card_value = card_values[player_hand[-1]][0] if player_draws else None
+        if banker_value < 3 or (banker_value == 3 and third_card_value != 8) or (banker_value == 4 and third_card_value in [2, 3, 4, 5, 6, 7]) or (banker_value == 5 and third_card_value in [4, 5, 6, 7]) or (banker_value == 6 and third_card_value in [6, 7]):
+            banker_hand.append(deal_card())
+            banker_value = calculate_hand_value(banker_hand)
+            banker_draws = True
+    
+    sleep(1)
+    if player_draws:
+        st.markdown(f"<h4 style='color:blue; text-shadow: 2px 2px 4px black;'>Player Draws: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+        sleep(1)
+    if banker_draws:
+        st.markdown(f"<h4 style='color:orange; text-shadow: 2px 2px 4px black;'>Banker Draws: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+        sleep(1)
+    
     # Determine the winner
     winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
     result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
