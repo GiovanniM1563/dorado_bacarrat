@@ -127,14 +127,14 @@ def play_baccarat():
     # Determine winner
     player_value = calculate_hand_value(player_hand)
     banker_value = calculate_hand_value(banker_hand)
-    winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
-    result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
+    winner = "Player Wins!" if player_value > banker_value else "Banker Wins!" if banker_value > player_value else "Tie"
+    result_color = "blue" if winner == "Player Wins!" else "orange" if winner == "Banker Wins!" else "green"
     
     # Final Outcome Display with Fanfare
     st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])}</h3>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])}</h3>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! 🎉</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
     
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
