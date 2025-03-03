@@ -85,24 +85,10 @@ def play_baccarat():
     
     col1, col2 = st.columns(2)
     
-    # Reveal Player's and Banker's first two cards alternating
+    # Reveal Player's first and second cards
     for i in range(2):
         sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's card {i+1}...</h3>", unsafe_allow_html=True)
-        player_hand.append(deal_card())
-        sleep(5)
-        announcement.empty()
-        with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Card {i+1}: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-        
-        sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's card {i+1}...</h3>", unsafe_allow_html=True)
-        banker_hand.append(deal_card())
-        sleep(5)
-        announcement.empty()
-        with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Card {i+1}: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-        player_hand.append(deal_card())
+ nd.append(deal_card())
         sleep(5)
         announcement.empty()
         with col1:
