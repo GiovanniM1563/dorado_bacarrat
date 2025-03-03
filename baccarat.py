@@ -88,12 +88,16 @@ def play_baccarat():
     player_draws = banker_draws = False
     if not player_natural and not banker_natural:
         if player_value < 6:
+            st.markdown("<h4 style='text-align: center; color: blue;'>🔵 Player is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
+            sleep(1.5)
             player_hand.append(deal_card())
             player_value = calculate_hand_value(player_hand)
             player_draws = True
         
         third_card_value = card_values[player_hand[-1]][0] if player_draws else None
         if banker_value < 3 or (banker_value == 3 and third_card_value != 8) or (banker_value == 4 and third_card_value in [2, 3, 4, 5, 6, 7]) or (banker_value == 5 and third_card_value in [4, 5, 6, 7]) or (banker_value == 6 and third_card_value in [6, 7]):
+            st.markdown("<h4 style='text-align: center; color: orange;'>🟠 Banker is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
+            sleep(1.5)
             banker_hand.append(deal_card())
             banker_value = calculate_hand_value(banker_hand)
             banker_draws = True
