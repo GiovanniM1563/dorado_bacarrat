@@ -16,6 +16,7 @@ def set_background_style():
         <style>
         .stApp {
             background-color: #006400;
+            position: relative;
         }
         .stApp::before {
             content: """""";
@@ -27,7 +28,6 @@ def set_background_style():
             background-repeat: no-repeat;
             background-size: contain;
             background-position: center;
-            opacity: 0.2;
             width: 50vw;
             height: 50vh;
             z-index: -1;
