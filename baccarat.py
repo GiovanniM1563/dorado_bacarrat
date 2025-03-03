@@ -60,29 +60,34 @@ def display_card_icon(card):
 
 def play_baccarat():
     global deck
-    player_hand, banker_hand = [deal_card(), deal_card()], [deal_card(), deal_card()]
+    player_hand, banker_hand = [], []
+    
+    st.markdown("<h3 style='text-align: center; color: gold;'>🃏 Dealing Cards... 🎴</h3>", unsafe_allow_html=True)
+    
+    # Reveal Player's first card
+    sleep(1)
+    player_hand.append(deal_card())
+    st.markdown(f"<h4 style='color:blue;'>🔵 Player's First Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+    sleep(1)
+    
+    # Reveal Banker's first card
+    banker_hand.append(deal_card())
+    st.markdown(f"<h4 style='color:orange;'>🟠 Banker's First Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+    sleep(1)
+    
+    # Reveal Player's second card
+    player_hand.append(deal_card())
+    st.markdown(f"<h4 style='color:blue;'>🔵 Player's Second Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+    sleep(1)
+    
+    # Reveal Banker's second card
+    banker_hand.append(deal_card())
+    st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Second Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+    sleep(1)
+    
     player_value, banker_value = calculate_hand_value(player_hand), calculate_hand_value(banker_hand)
     
     player_natural, banker_natural = player_value in [8, 9], banker_value in [8, 9]
-    
-    st.markdown("""
-        <h3 style='text-align: center; color: gold;'>🃏 Dealing Cards... 🎴</h3>
-    """, unsafe_allow_html=True)
-    
-    # Add a loading bar for anticipation
-    progress_bar = st.progress(0)
-    for i in range(100):
-        sleep(0.02)
-        progress_bar.progress(i + 1)
-    sleep(0.5)
-    progress_bar.empty()
-    
-    # Display player and banker hands visually with glowing effect
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"<h4 style='color:blue; text-shadow: 2px 2px 4px black;'>Player's Cards:</h4> {' '.join([display_card_icon(c) for c in player_hand])}", unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"<h4 style='color:orange; text-shadow: 2px 2px 4px black;'>Banker's Cards:</h4> {' '.join([display_card_icon(c) for c in banker_hand])}", unsafe_allow_html=True)
     
     # Implement the third card rule
     player_draws = banker_draws = False
@@ -91,6 +96,7 @@ def play_baccarat():
             st.markdown("<h4 style='text-align: center; color: blue;'>🔵 Player is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
             sleep(1.5)
             player_hand.append(deal_card())
+            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
             player_value = calculate_hand_value(player_hand)
             player_draws = True
         
@@ -99,16 +105,11 @@ def play_baccarat():
             st.markdown("<h4 style='text-align: center; color: orange;'>🟠 Banker is drawing a third card... 🎴</h4>", unsafe_allow_html=True)
             sleep(1.5)
             banker_hand.append(deal_card())
+            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
             banker_value = calculate_hand_value(banker_hand)
             banker_draws = True
     
     sleep(1)
-    if player_draws:
-        st.markdown(f"<h4 style='color:blue; text-shadow: 2px 2px 4px black;'>Player Draws: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
-        sleep(1)
-    if banker_draws:
-        st.markdown(f"<h4 style='color:orange; text-shadow: 2px 2px 4px black;'>Banker Draws: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
-        sleep(1)
     
     # Determine the winner
     winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
