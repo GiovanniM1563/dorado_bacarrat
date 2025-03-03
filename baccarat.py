@@ -9,23 +9,15 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Apply custom background color for a casino feel
-page_bg_img = '''
-<style>
-body {
-background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/8717957e-7245-47c0-4b90-01043e6b3700/public");
-background-size: cover;
-}
-</style>
-'''
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
-def set_background_color():
+# Apply custom background image
+def set_background_image():
     st.markdown(
         """
         <style>
-        .stApp {
-            background-color: #006400;
+        body {
+            background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/8717957e-7245-47c0-4b90-01043e6b3700/public");
+            background-size: cover;
+            background-position: center;
         }
         .stButton>button {
             background-color: gold;
@@ -41,7 +33,7 @@ def set_background_color():
         """,
         unsafe_allow_html=True
     )
-set_background_color()
+set_background_image()
 
 # Define card values and colors
 card_values = {
@@ -138,13 +130,7 @@ def play_baccarat():
     st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])} - {player_value}</h3>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])} - {banker_value}</h3>", unsafe_allow_html=True)
     
-    winner = "Player" if player_value > banker_value else "Banker" if banker_value > player_value else "Tie"
-    result_color = "blue" if winner == "Player" else "orange" if winner == "Banker" else "green"
-    
-    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} Wins! 🎉</h1>", unsafe_allow_html=True)
-    
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to Baccarat 🎲</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Click below to deal a hand.</p>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
     play_baccarat()
