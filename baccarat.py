@@ -49,11 +49,11 @@ st.sidebar.write("- The goal is to get a hand closest to 9.")
 st.sidebar.write("- Face cards and 10s are worth 0, Aces are worth 1.")
 st.sidebar.write("- If the total is over 9, only the last digit counts.")
 st.sidebar.write("- Player draws a third card if their total is 0-5.")
-st.sidebar.write("- Banker draws based on Player's third card and their total.")
+st.sidebar.write("- Banker draws based on Player's third card and their total, following traditional rules.")
 
 # Define card values and colors
 card_values = {
-    **{f'{rank}{suit}': (0 if rank in 'JQK10' else 1 if rank == 'A' else int(rank), 'black' if suit in '♠♣' else 'red')
+    **{f'{rank}{suit}': (0 if rank in ['J', 'Q', 'K', '10'] else 1 if rank == 'A' else int(rank), 'black' if suit in '♠♣' else 'red')
        for rank in [str(n) for n in range(2, 11)] + ['J', 'Q', 'K', 'A'] for suit in '♠♥♦♣'}
 }
 
@@ -105,9 +105,8 @@ def play_baccarat():
         with col2:
             st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Card {i+1}: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     
-    # Implement third card rule
+    # Determine if the Player draws a third card
     player_value = calculate_hand_value(player_hand)
-    banker_value = calculate_hand_value(banker_hand)
     player_third_card = None
     if player_value < 6:
         announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
@@ -115,20 +114,50 @@ def play_baccarat():
         player_third_card = deal_card()
         player_hand.append(player_third_card)
         with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
+            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_third_card)}</h4>", unsafe_allow_html=True)
     
-    if banker_value < 6:
+    # Determine if the Banker draws a third card following traditional rules
+    banker_value = calculate_hand_value(banker_hand)
+    draw_banker = False
+    if player_third_card is None:
+        # Player stands; banker draws if total is less than 6
+        if banker_value < 6:
+            draw_banker = True
+    else:
+        # Player drew a third card; apply traditional rules
+        pt_value = card_values[player_third_card][0]
+        if banker_value <= 2:
+            draw_banker = True
+        elif banker_value == 3 and pt_value != 8:
+            draw_banker = True
+        elif banker_value == 4 and 2 <= pt_value <= 7:
+            draw_banker = True
+        elif banker_value == 5 and 4 <= pt_value <= 7:
+            draw_banker = True
+        elif banker_value == 6 and pt_value in [6, 7]:
+            draw_banker = True
+        # Banker stands on 7 or more
+    
+    if draw_banker:
         announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
-        banker_hand.append(deal_card())
+        banker_third = deal_card()
+        banker_hand.append(banker_third)
         with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
+            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_third)}</h4>", unsafe_allow_html=True)
     
-    # Determine winner
-    player_value = calculate_hand_value(player_hand)
-    banker_value = calculate_hand_value(banker_hand)
-    winner = "Player Wins!" if player_value > banker_value else "Banker Wins!" if banker_value > player_value else "Tie"
-    result_color = "blue" if winner == "Player Wins!" else "orange" if winner == "Banker Wins!" else "green"
+    # Determine final hand values and winner
+    player_final = calculate_hand_value(player_hand)
+    banker_final = calculate_hand_value(banker_hand)
+    if player_final > banker_final:
+        winner = "Player Wins!"
+        result_color = "blue"
+    elif banker_final > player_final:
+        winner = "Banker Wins!"
+        result_color = "orange"
+    else:
+        winner = "Tie"
+        result_color = "green"
     
     # Final Outcome Display with Fanfare
     st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
