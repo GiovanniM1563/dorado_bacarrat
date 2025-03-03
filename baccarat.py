@@ -9,28 +9,13 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Baccarat Casino", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Apply custom background color and watermark
-def set_background_style():
+# Apply custom background color for a casino feel
+def set_background_color():
     st.markdown(
         """
         <style>
         .stApp {
             background-color: #006400;
-            position: relative;
-        }
-        .stApp::before {
-            content: """""";
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-image: url('el_dorado.png');
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-            width: 50vw;
-            height: 50vh;
-            z-index: -1;
         }
         .stButton>button {
             background-color: gold;
@@ -46,7 +31,7 @@ def set_background_style():
         """,
         unsafe_allow_html=True
     )
-set_background_style()
+set_background_color()
 
 # Define card values and colors
 card_values = {
@@ -113,6 +98,27 @@ def play_baccarat():
     announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's second card...</h3>", unsafe_allow_html=True)
     banker_hand.append(deal_card())
     sleep(3)
+    
+    # Determine if a third card is needed
+    player_value = calculate_hand_value(player_hand)
+    banker_value = calculate_hand_value(banker_hand)
+    
+    player_third_card = None
+    if player_value < 6:
+        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        player_third_card = deal_card()
+        player_hand.append(player_third_card)
+    
+    # Banker third card rules
+    if banker_value < 3 or (
+        banker_value == 3 and (player_third_card != '8')) or (
+        banker_value == 4 and (player_third_card in ['2', '3', '4', '5', '6', '7'])) or (
+        banker_value == 5 and (player_third_card in ['4', '5', '6', '7'])) or (
+        banker_value == 6 and (player_third_card in ['6', '7'])):
+        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+        sleep(3)
+        banker_hand.append(deal_card())
     
     # Determine winner
     player_value = calculate_hand_value(player_hand)
