@@ -15,7 +15,7 @@ def set_background_image():
         """
         <style>
         body {
-            background-image: url("https://ranchroleplay.com/cdn-cgi/imagedelivery/Hgl-UO4Kg_kPptcXUHVOrA/7cb8ff65-ae67-4523-8800-108f7dde7500/public");
+            background-image: url("https://www.canva.com/design/DAGgpoWNy2s/nLtPQ-Umht3k3JedesgQ3w/view?utm_content=DAGgpoWNy2s&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h2918767e8e");
             background-size: cover;
             background-position: center;
         }
