@@ -89,8 +89,15 @@ if st.sidebar.button("🔄 Reshuffle Deck"):
     st.sidebar.success("Deck reshuffled!")
 
 def play_dealing_sound():
-    # Play the card mixing sound
-    st.audio("card-mixing-48088.mp3", format="audio/mp3")
+    # Embed an HTML audio element that autoplays the card mixing sound (hidden)
+    st.markdown(
+        """
+        <audio autoplay style="display:none;">
+            <source src="card-mixing-48088.mp3" type="audio/mp3">
+        </audio>
+        """,
+        unsafe_allow_html=True,
+    )
 
 def deal_card():
     if len(st.session_state.deck) <= 10:
