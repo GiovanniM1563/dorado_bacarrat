@@ -3,12 +3,14 @@ import random
 import csv
 import html
 import base64
+import uuid
 import streamlit as st
 import pandas as pd
 from time import sleep
 
 # Page Configuration
-st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", 
+                   page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
 # Set background color and hide audio controls via CSS
 def set_background_color():
@@ -54,9 +56,11 @@ def get_card_image_path(card):
 
 # Define card values and colors
 card_values = {
-    **{f'{rank}{suit}': (0 if rank in ['J', 'Q', 'K', '10'] else 1 if rank == 'A' else int(rank),
+    **{f'{rank}{suit}': (0 if rank in ['J', 'Q', 'K', '10'] 
+                          else 1 if rank == 'A' else int(rank),
                            'black' if suit in '♠♣' else 'red')
-       for rank in [str(n) for n in range(2, 11)] + ['J', 'Q', 'K', 'A'] for suit in '♠♥♦♣'}
+       for rank in [str(n) for n in range(2, 11)] + ['J', 'Q', 'K', 'A']
+       for suit in '♠♥♦♣'}
 }
 
 # Sidebar Information
@@ -103,13 +107,14 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
-    # Create an audio placeholder that will be updated each time a card is dealt.
+    # Create a single audio placeholder to play sounds.
     audio_placeholder = st.empty()
-    
-    # Function to play the card mixing sound using the audio placeholder.
-    def play_dealing_sound():
-        audio_placeholder.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
 
+    # Function to play the card mixing sound using a unique URL.
+    def play_dealing_sound():
+        unique_url = "card-mixing-48088.mp3?dummy=" + str(uuid.uuid4())
+        audio_placeholder.audio(unique_url, format="audio/mp3", autoplay=True)
+    
     # Set up player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
     player_cols = st.columns([1, 2, 2, 2, 1])
