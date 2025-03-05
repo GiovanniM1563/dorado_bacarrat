@@ -128,7 +128,7 @@ def play_baccarat():
         
         # Deal Player's card
         sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
         player_hand.append(card)
         player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
@@ -137,7 +137,7 @@ def play_baccarat():
         
         # Deal Banker's card
         sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
         banker_hand.append(card)
         banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
