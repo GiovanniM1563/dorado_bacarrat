@@ -3,6 +3,7 @@ import random
 import csv
 import html
 import base64
+import uuid
 import streamlit as st
 import pandas as pd
 from time import sleep
@@ -93,9 +94,8 @@ if st.sidebar.button("🔄 Reshuffle Deck"):
     st.sidebar.success("Deck reshuffled!")
 
 def play_dealing_sound():
-    # Use st.audio to autoplay the card mixing sound.
-    # The CSS above hides the audio element so no play bar is visible.
-    st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
+    # st.audio now uses a unique key to avoid duplicate element errors.
+    st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True, key=str(uuid.uuid4()))
 
 def deal_card():
     if len(st.session_state.deck) <= 10:
