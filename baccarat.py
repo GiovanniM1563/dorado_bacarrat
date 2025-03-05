@@ -10,7 +10,7 @@ from time import sleep
 # Page Configuration
 st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Function to set page background color
+# Set background color and hide audio controls via CSS
 def set_background_color():
     st.markdown(
         """
@@ -28,12 +28,16 @@ def set_background_color():
         .stMarkdown {
             text-align: center;
         }
+        /* Hide all audio elements */
+        audio {
+            display: none !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-# Apply background color
+# Apply background color and hide audio bar
 set_background_color()
 
 # Mapping for suit symbols to image folder names
@@ -89,15 +93,9 @@ if st.sidebar.button("🔄 Reshuffle Deck"):
     st.sidebar.success("Deck reshuffled!")
 
 def play_dealing_sound():
-    # Embed an HTML audio element that autoplays the card mixing sound (hidden)
-    st.markdown(
-        """
-        <audio autoplay style="display:none;">
-            <source src="card-mixing-48088.mp3" type="audio/mp3">
-        </audio>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Use st.audio to autoplay the card mixing sound.
+    # The CSS above hides the audio element so no play bar is visible.
+    st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
 
 def deal_card():
     if len(st.session_state.deck) <= 10:
