@@ -195,6 +195,6 @@ def play_baccarat():
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
 # Main Page Deal Button
-st.markdown("<h2 style='text-align: center; color: gold;'>🎲 Welcome to El Dorado Lounge's Baccarat 🎲</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to El Dorado Lounge's Baccarat</h2>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
     play_baccarat()
