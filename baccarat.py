@@ -7,35 +7,26 @@ import streamlit as st
 import pandas as pd
 from time import sleep
 
-# Page Configuration
-st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", 
-                   page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
-
-# Function to set page background color
-def set_background_color():
+# Set background using a hack for later Streamlit versions
+def set_bg_hack(main_bg):
+    '''
+    Unpacks an image from the root folder and sets it as the background.
+    '''
+    main_bg_ext = "png"
     st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: #228B22; /* Felt green color */
-        }
-        .stButton>button {
-            background-color: gold;
-            color: black;
-            font-size: 18px;
-            border-radius: 10px;
-            padding: 10px 20px;
-        }
-        .stMarkdown {
-            text-align: center;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+         f"""
+         <style>
+         .stApp {{
+             background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()});
+             background-size: cover;
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True,
+     )
 
-# Apply background color
-set_background_color()
+# Call the function with your background file
+set_bg_hack("EL-DORADO_bck.png")
 
 # Mapping for suit symbols to image folder names
 suit_map = {'♣': 'Clubs', '♦': 'Diamonds', '♥': 'Hearts', '♠': 'Spades'}
