@@ -102,18 +102,20 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
-    # Set up player's hand placeholders using a five-column layout for centering.
-    st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
-    player_cols = st.columns([1, 2, 2, 2, 1])
-    player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
-    for ph in player_placeholders:
-        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
-    
+
     # Set up banker's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
     banker_cols = st.columns([1, 2, 2, 2, 1])
     banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
     for ph in banker_placeholders:
+      ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
+    
+
+    # Set up player's hand placeholders using a five-column layout for centering.
+    st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
+    player_cols = st.columns([1, 2, 2, 2, 1])
+    player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
+    for ph in player_placeholders:
         ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
     
     announcement = st.empty()
