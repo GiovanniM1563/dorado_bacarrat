@@ -3,7 +3,6 @@ import random
 import csv
 import html
 import base64
-import uuid
 import streamlit as st
 import pandas as pd
 from time import sleep
@@ -12,7 +11,7 @@ from time import sleep
 st.set_page_config(page_title="Welcome to El Dorado Lounge's Baccarat", 
                    page_icon="🎲", layout="wide", initial_sidebar_state="collapsed")
 
-# Set background color and hide audio controls via CSS
+# Function to set page background color
 def set_background_color():
     st.markdown(
         """
@@ -30,16 +29,12 @@ def set_background_color():
         .stMarkdown {
             text-align: center;
         }
-        /* Hide all audio elements */
-        audio {
-            display: none !important;
-        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-# Apply background color and hide audio bar
+# Apply background color
 set_background_color()
 
 # Mapping for suit symbols to image folder names
@@ -107,14 +102,6 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
-    # Create a single audio placeholder to play sounds.
-    audio_placeholder = st.empty()
-
-    # Function to play the card mixing sound using a unique URL.
-    def play_dealing_sound():
-        unique_url = "card-mixing-48088.mp3?dummy=" + str(uuid.uuid4())
-        audio_placeholder.audio(unique_url, format="audio/mp3", autoplay=True)
-    
     # Set up player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
     player_cols = st.columns([1, 2, 2, 2, 1])
@@ -140,7 +127,6 @@ def play_baccarat():
         # Deal Player's card
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
-        play_dealing_sound()
         card = deal_card()
         player_hand.append(card)
         player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
@@ -150,7 +136,6 @@ def play_baccarat():
         # Deal Banker's card
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
-        play_dealing_sound()
         card = deal_card()
         banker_hand.append(card)
         banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
@@ -163,7 +148,6 @@ def play_baccarat():
     if player_value < 6:
         announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
-        play_dealing_sound()
         player_third_card = deal_card()
         player_hand.append(player_third_card)
         player_placeholders[2].image(get_card_image_path(player_third_card), use_container_width=False, width=100)
@@ -191,7 +175,6 @@ def play_baccarat():
     if draw_banker:
         announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
-        play_dealing_sound()
         banker_third = deal_card()
         banker_hand.append(banker_third)
         banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False, width=100)
