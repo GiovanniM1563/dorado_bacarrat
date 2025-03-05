@@ -107,14 +107,14 @@ def play_baccarat():
     player_cols = st.columns([1, 2, 2, 2, 1])
     player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
     for ph in player_placeholders:
-        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=100)
+        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
     
     # Set up banker's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
     banker_cols = st.columns([1, 2, 2, 2, 1])
     banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
     for ph in banker_placeholders:
-        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=100)
+        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
     
     announcement = st.empty()
     player_hand = []
@@ -129,7 +129,7 @@ def play_baccarat():
         announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
         player_hand.append(card)
-        player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
+        player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
         
@@ -138,7 +138,7 @@ def play_baccarat():
         announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
         banker_hand.append(card)
-        banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
+        banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
     
@@ -150,7 +150,7 @@ def play_baccarat():
         sleep(5)
         player_third_card = deal_card()
         player_hand.append(player_third_card)
-        player_placeholders[2].image(get_card_image_path(player_third_card), use_container_width=False, width=100)
+        player_placeholders[2].image(get_card_image_path(player_third_card), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
     
@@ -177,7 +177,7 @@ def play_baccarat():
         sleep(5)
         banker_third = deal_card()
         banker_hand.append(banker_third)
-        banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False, width=100)
+        banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
     
