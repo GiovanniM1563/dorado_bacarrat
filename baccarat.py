@@ -7,6 +7,14 @@ import streamlit as st
 import pandas as pd
 from time import sleep
 
+# Page Configuration with sidebar starting collapsed
+st.set_page_config(
+    page_title="Welcome to El Dorado Lounge's Baccarat", 
+    page_icon="🎲", 
+    layout="wide", 
+    initial_sidebar_state="collapsed"
+)
+
 # Set background using a hack for later Streamlit versions
 def set_bg_hack(main_bg):
     '''
