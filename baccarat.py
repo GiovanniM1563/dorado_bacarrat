@@ -88,6 +88,10 @@ if st.sidebar.button("🔄 Reshuffle Deck"):
     random.shuffle(st.session_state.deck)
     st.sidebar.success("Deck reshuffled!")
 
+def play_dealing_sound():
+    # Play the card mixing sound
+    st.audio("card-mixing-48088.mp3", format="audio/mp3")
+
 def deal_card():
     if len(st.session_state.deck) <= 10:
         st.warning("🔄 The deck is nearly exhausted. Next hand will be the last hand before reshuffling.")
@@ -99,21 +103,19 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
-    # Set up player's hand placeholders
+    # Set up player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
-    player_cols = st.columns(3)
-    # Create explicit empty containers for each card slot
-    player_placeholders = [col.empty() for col in player_cols]
-    # Initialize with card back images
+    player_cols = st.columns([1, 2, 2, 2, 1])
+    player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
     for ph in player_placeholders:
-        ph.image("Cards/cardBack_red4.png", use_container_width=False)
+        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=100)
     
-    # Set up banker's hand placeholders
+    # Set up banker's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
-    banker_cols = st.columns(3)
-    banker_placeholders = [col.empty() for col in banker_cols]
+    banker_cols = st.columns([1, 2, 2, 2, 1])
+    banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
     for ph in banker_placeholders:
-        ph.image("Cards/cardBack_red4.png", use_container_width=False)
+        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=100)
     
     announcement = st.empty()
     player_hand = []
@@ -126,18 +128,20 @@ def play_baccarat():
         # Deal Player's card
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
+        play_dealing_sound()
         card = deal_card()
         player_hand.append(card)
-        player_placeholders[i].image(get_card_image_path(card), use_container_width=False)
+        player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
         sleep(5)
         announcement.empty()
         
         # Deal Banker's card
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
+        play_dealing_sound()
         card = deal_card()
         banker_hand.append(card)
-        banker_placeholders[i].image(get_card_image_path(card), use_container_width=False)
+        banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=100)
         sleep(5)
         announcement.empty()
     
@@ -147,9 +151,10 @@ def play_baccarat():
     if player_value < 6:
         announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
+        play_dealing_sound()
         player_third_card = deal_card()
         player_hand.append(player_third_card)
-        player_placeholders[2].image(get_card_image_path(player_third_card), use_container_width=False)
+        player_placeholders[2].image(get_card_image_path(player_third_card), use_container_width=False, width=100)
         sleep(5)
         announcement.empty()
     
@@ -174,15 +179,21 @@ def play_baccarat():
     if draw_banker:
         announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
+        play_dealing_sound()
         banker_third = deal_card()
         banker_hand.append(banker_third)
-        banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False)
+        banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False, width=100)
         sleep(5)
         announcement.empty()
     
-    # Calculate final hand values and display the result
+    # Calculate and display final hand values
     player_final = calculate_hand_value(player_hand)
     banker_final = calculate_hand_value(banker_hand)
+    
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>Player Hand Value: {player_final}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>Banker Hand Value: {banker_final}</h3>", unsafe_allow_html=True)
+    
+    # Determine and display the final outcome
     if player_final > banker_final:
         winner = "Player Wins!"
         result_color = "blue"
