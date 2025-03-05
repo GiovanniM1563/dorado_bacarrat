@@ -125,6 +125,7 @@ def play_baccarat():
         ordinal = "First" if i == 0 else "Second"
         
         # Deal Player's card
+        st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
@@ -134,6 +135,7 @@ def play_baccarat():
         announcement.empty()
         
         # Deal Banker's card
+        st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
         sleep(5)
         announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
         card = deal_card()
@@ -174,6 +176,7 @@ def play_baccarat():
             draw_banker = True
     if draw_banker:
         announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's third card...</h3>", unsafe_allow_html=True)
+        st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
         sleep(5)
         banker_third = deal_card()
         banker_hand.append(banker_third)
