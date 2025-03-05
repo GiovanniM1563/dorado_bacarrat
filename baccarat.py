@@ -58,27 +58,28 @@ card_values = {
        for suit in '♠♥♦♣'}
 }
 
-# Sidebar Information
-st.sidebar.title("📜 Baccarat Rules & Odds")
-st.sidebar.write("🔢 **Number of Decks:** 8")
+# Sidebar Information (New-Player Friendly)
+st.sidebar.title("📜 Baccarat Basics & Odds")
+st.sidebar.write("Welcome to Baccarat! Here’s what you need to know:")
+st.sidebar.write("🔢 **Decks in Play:** 8 decks")
 st.sidebar.write("🎲 **Game Odds:**")
-st.sidebar.write("- **Player Win:** ~44.62%")
-st.sidebar.write("- **Banker Win:** ~45.86%")
-st.sidebar.write("- **Tie:** ~9.52%")
-st.sidebar.write("\n**📜 Rules:**")
-st.sidebar.write("- The goal is to get a hand closest to 9.")
-st.sidebar.write("- Face cards and 10s are worth 0, Aces are worth 1.")
-st.sidebar.write("- If the total is over 9, only the last digit counts.")
-st.sidebar.write("- Player draws a third card if their total is 0-5.")
-st.sidebar.write("- Banker draws based on the player's third card and their total, following traditional rules:")
-st.sidebar.write("  - If the player stands (no third card), banker draws if total is less than 6.")
-st.sidebar.write("  - If the player draws a third card:")
-st.sidebar.write("    - Banker draws with a total of 0–2.")
-st.sidebar.write("    - Banker draws with a total of 3 unless the player's third card is an 8.")
-st.sidebar.write("    - Banker draws with a total of 4 if the player's third card is 2–7.")
-st.sidebar.write("    - Banker draws with a total of 5 if the player's third card is 4–7.")
-st.sidebar.write("    - Banker draws with a total of 6 if the player's third card is 6 or 7.")
-st.sidebar.write("    - Banker stands with a total of 7 or more.")
+st.sidebar.write("- **Player Wins:** About 44.62% chance")
+st.sidebar.write("- **Banker Wins:** About 45.86% chance")
+st.sidebar.write("- **Tie:** About 9.52% chance")
+st.sidebar.write("\n**Basic Rules:**")
+st.sidebar.write("- Your goal is to have a hand with a total value closest to 9.")
+st.sidebar.write("- Cards 2–9 are worth their face value, 10s and face cards (J, Q, K) are worth 0, and Aces are worth 1.")
+st.sidebar.write("- If the sum is 10 or more, only the last digit counts (e.g., 15 becomes 5).")
+st.sidebar.write("- The Player gets a third card if their total is between 0 and 5.")
+st.sidebar.write("- The Banker’s drawing rules depend on both their total and the Player’s third card:")
+st.sidebar.write("   • If the Player doesn’t draw a third card, the Banker draws if their total is 0–5.")
+st.sidebar.write("   • If the Player does draw a third card, the Banker:")
+st.sidebar.write("     - Draws if their total is 0, 1, or 2.")
+st.sidebar.write("     - Draws if their total is 3 (unless the Player’s third card is 8).")
+st.sidebar.write("     - Draws if their total is 4 and the Player’s third card is 2–7.")
+st.sidebar.write("     - Draws if their total is 5 and the Player’s third card is 4–7.")
+st.sidebar.write("     - Draws if their total is 6 and the Player’s third card is 6 or 7.")
+st.sidebar.write("     - Stands if they have 7 or more.")
 
 # Initialize deck in session_state if not already present
 if "deck" not in st.session_state:
@@ -89,11 +90,11 @@ if "deck" not in st.session_state:
 if st.sidebar.button("🔄 Reshuffle Deck"):
     st.session_state.deck = list(card_values.keys()) * 8
     random.shuffle(st.session_state.deck)
-    st.sidebar.success("Deck reshuffled!")
+    st.sidebar.success("The deck has been reshuffled!")
 
 def deal_card():
     if len(st.session_state.deck) <= 10:
-        st.warning("🔄 The deck is nearly exhausted. Next hand will be the last hand before reshuffling.")
+        st.warning("Almost out of cards! The deck will be reshuffled soon.")
         st.session_state.deck = list(card_values.keys()) * 8
         random.shuffle(st.session_state.deck)
     return st.session_state.deck.pop()
@@ -102,16 +103,14 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
-
-    # Set up banker's hand placeholders using a five-column layout for centering.
+    # Set up Banker's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
     banker_cols = st.columns([1, 2, 2, 2, 1])
     banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
     for ph in banker_placeholders:
-      ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
+        ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
     
-
-    # Set up player's hand placeholders using a five-column layout for centering.
+    # Set up Player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
     player_cols = st.columns([1, 2, 2, 2, 1])
     player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
@@ -128,7 +127,7 @@ def play_baccarat():
         
         # Deal Player's card
         sleep(5)
-        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>Dealing Player's {ordinal} card... Please wait!</h2>", unsafe_allow_html=True)
         card = deal_card()
         player_hand.append(card)
         player_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
@@ -137,7 +136,7 @@ def play_baccarat():
         
         # Deal Banker's card
         sleep(5)
-        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>Dealing Banker's {ordinal} card... Hold tight!</h2>", unsafe_allow_html=True)
         card = deal_card()
         banker_hand.append(card)
         banker_placeholders[i].image(get_card_image_path(card), use_container_width=False, width=200)
@@ -148,7 +147,7 @@ def play_baccarat():
     player_value = calculate_hand_value(player_hand)
     player_third_card = None
     if player_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's third card...</h3>", unsafe_allow_html=True)
+        announcement.markdown("<h2 style='text-align: center; color: blue;'>Player gets a third card...</h2>", unsafe_allow_html=True)
         sleep(5)
         player_third_card = deal_card()
         player_hand.append(player_third_card)
@@ -175,7 +174,7 @@ def play_baccarat():
         elif banker_value == 6 and pt_value in [6, 7]:
             draw_banker = True
     if draw_banker:
-        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's third card...</h3>", unsafe_allow_html=True)
+        announcement.markdown("<h2 style='text-align: center; color: orange;'>Banker draws a third card...</h2>", unsafe_allow_html=True)
         sleep(5)
         banker_third = deal_card()
         banker_hand.append(banker_third)
@@ -198,7 +197,7 @@ def play_baccarat():
         winner = "Banker Wins!"
         result_color = "orange"
     else:
-        winner = "Tie"
+        winner = "It's a Tie!"
         result_color = "green"
     
     st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
