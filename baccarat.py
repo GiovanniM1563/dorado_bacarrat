@@ -36,6 +36,24 @@ def set_background_color():
 # Apply background color
 set_background_color()
 
+# Define suit mapping for image file names
+suit_map = {'♣': 'Clubs', '♦': 'Diamonds', '♥': 'Hearts', '♠': 'Spades'}
+
+def get_card_image_path(card):
+    """
+    Given a card code (e.g., "10♣", "A♥"), returns the file path for the corresponding image.
+    """
+    rank = card[:-1]
+    suit_symbol = card[-1]
+    suit_name = suit_map.get(suit_symbol, "")
+    return f"Cards/card{suit_name}{rank}.png"
+
+# Define card values and colors
+card_values = {
+    **{f'{rank}{suit}': (0 if rank in ['J', 'Q', 'K', '10'] else 1 if rank == 'A' else int(rank), 'black' if suit in '♠♣' else 'red')
+       for rank in [str(n) for n in range(2, 11)] + ['J', 'Q', 'K', 'A'] for suit in '♠♥♦♣'}
+}
+
 # Sidebar Information
 st.sidebar.title("📜 Baccarat Rules & Odds")
 st.sidebar.write("🔢 **Number of Decks:** 8")
@@ -59,81 +77,84 @@ st.sidebar.write("    - Banker draws with a total of 5 if the player's third car
 st.sidebar.write("    - Banker draws with a total of 6 if the player's third card is 6 or 7.")
 st.sidebar.write("    - Banker stands with a total of 7 or more.")
 
-# Define card values and colors
-card_values = {
-    **{f'{rank}{suit}': (0 if rank in ['J', 'Q', 'K', '10'] else 1 if rank == 'A' else int(rank), 'black' if suit in '♠♣' else 'red')
-       for rank in [str(n) for n in range(2, 11)] + ['J', 'Q', 'K', 'A'] for suit in '♠♥♦♣'}
-}
+# Initialize deck in session_state if not already present
+if "deck" not in st.session_state:
+    st.session_state.deck = list(card_values.keys()) * 8
+    random.shuffle(st.session_state.deck)
 
-# Deck of 8 shuffled decks
-deck = list(card_values.keys()) * 8
-random.shuffle(deck)
+# Add Reshuffle Deck button to the sidebar
+if st.sidebar.button("🔄 Reshuffle Deck"):
+    st.session_state.deck = list(card_values.keys()) * 8
+    random.shuffle(st.session_state.deck)
+    st.sidebar.success("Deck reshuffled!")
 
 def deal_card():
-    global deck
-    if len(deck) <= 10:
+    if len(st.session_state.deck) <= 10:
         st.warning("🔄 The deck is nearly exhausted. Next hand will be the last hand before reshuffling.")
-        deck = list(card_values.keys()) * 8
-        random.shuffle(deck)
-    return deck.pop()
+        st.session_state.deck = list(card_values.keys()) * 8
+        random.shuffle(st.session_state.deck)
+    return st.session_state.deck.pop()
 
 def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
-def display_card_icon(card):
-    value, color = card_values[card]
-    return f'<span style="color:{color}; font-size:28px;">{card}</span>'
-
 def play_baccarat():
-    global deck
-    player_hand, banker_hand = [], []
+    # Set up player's hand display with 3 card slots
+    st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
+    player_placeholders = st.columns(3)
+    for col in player_placeholders:
+        col.image("Cards/cardBack_red4.png", use_column_width=True)
+    
+    # Set up banker's hand display with 3 card slots
+    st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
+    banker_placeholders = st.columns(3)
+    for col in banker_placeholders:
+        col.image("Cards/cardBack_red4.png", use_column_width=True)
     
     announcement = st.empty()
-    announcement.markdown("<h3 style='text-align: center; color: gold;'>🃏 Dealing Cards... 🎴</h3>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    # Alternate dealing: one card for the player then one for the banker (two rounds)
+    player_hand, banker_hand = [], []
+
+    # Alternate dealing: deal two cards each (first two rounds)
     for i in range(2):
         ordinal = "First" if i == 0 else "Second"
+        
         # Deal Player's card
         sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
-        player_hand.append(deal_card())
+        announcement.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's {ordinal} card...</h3>", unsafe_allow_html=True)
+        card = deal_card()
+        player_hand.append(card)
+        player_placeholders[i].image(get_card_image_path(card), use_column_width=True)
         sleep(5)
         announcement.empty()
-        with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's {ordinal} Card: {display_card_icon(player_hand[-1])}</h4>", unsafe_allow_html=True)
         
         # Deal Banker's card
         sleep(5)
-        announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
-        banker_hand.append(deal_card())
+        announcement.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's {ordinal} card...</h3>", unsafe_allow_html=True)
+        card = deal_card()
+        banker_hand.append(card)
+        banker_placeholders[i].image(get_card_image_path(card), use_column_width=True)
         sleep(5)
         announcement.empty()
-        with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's {ordinal} Card: {display_card_icon(banker_hand[-1])}</h4>", unsafe_allow_html=True)
     
     # Determine if the Player draws a third card
     player_value = calculate_hand_value(player_hand)
     player_third_card = None
     if player_value < 6:
-        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealer is drawing Player's third card...</h3>", unsafe_allow_html=True)
+        announcement.markdown("<h3 style='text-align: center; color: blue;'>🔵 Dealing Player's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
         player_third_card = deal_card()
         player_hand.append(player_third_card)
-        with col1:
-            st.markdown(f"<h4 style='color:blue;'>🔵 Player's Third Card: {display_card_icon(player_third_card)}</h4>", unsafe_allow_html=True)
+        player_placeholders[2].image(get_card_image_path(player_third_card), use_column_width=True)
+        sleep(5)
+        announcement.empty()
     
     # Determine if the Banker draws a third card following traditional rules
     banker_value = calculate_hand_value(banker_hand)
     draw_banker = False
     if player_third_card is None:
-        # Player stands; banker draws if total is less than 6
         if banker_value < 6:
             draw_banker = True
     else:
-        # Player drew a third card; apply traditional rules
         pt_value = card_values[player_third_card][0]
         if banker_value <= 2:
             draw_banker = True
@@ -145,17 +166,16 @@ def play_baccarat():
             draw_banker = True
         elif banker_value == 6 and pt_value in [6, 7]:
             draw_banker = True
-        # Banker stands on 7 or more
-    
     if draw_banker:
-        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealer is drawing Banker's third card...</h3>", unsafe_allow_html=True)
+        announcement.markdown("<h3 style='text-align: center; color: orange;'>🟠 Dealing Banker's third card...</h3>", unsafe_allow_html=True)
         sleep(5)
         banker_third = deal_card()
         banker_hand.append(banker_third)
-        with col2:
-            st.markdown(f"<h4 style='color:orange;'>🟠 Banker's Third Card: {display_card_icon(banker_third)}</h4>", unsafe_allow_html=True)
+        banker_placeholders[2].image(get_card_image_path(banker_third), use_column_width=True)
+        sleep(5)
+        announcement.empty()
     
-    # Determine final hand values and winner
+    # Determine final hand values and announce the winner
     player_final = calculate_hand_value(player_hand)
     banker_final = calculate_hand_value(banker_hand)
     if player_final > banker_final:
@@ -168,10 +188,7 @@ def play_baccarat():
         winner = "Tie"
         result_color = "green"
     
-    # Final Outcome Display with Fanfare
-    st.markdown("<h2 style='text-align: center; color: gold;'>🎊 Final Outcome 🎊</h2>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: blue;'>🔵 Player's Hand: {' '.join([display_card_icon(c) for c in player_hand])}</h3>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: orange;'>🟠 Banker's Hand: {' '.join([display_card_icon(c) for c in banker_hand])}</h3>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
     
 # Main Page Deal Button
