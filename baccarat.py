@@ -3,7 +3,6 @@ import random
 import csv
 import html
 import base64
-import uuid
 import streamlit as st
 import pandas as pd
 from time import sleep
@@ -93,10 +92,6 @@ if st.sidebar.button("🔄 Reshuffle Deck"):
     random.shuffle(st.session_state.deck)
     st.sidebar.success("Deck reshuffled!")
 
-def play_dealing_sound():
-    # st.audio now uses a unique key to avoid duplicate element errors.
-    st.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True, key=str(uuid.uuid4()))
-
 def deal_card():
     if len(st.session_state.deck) <= 10:
         st.warning("🔄 The deck is nearly exhausted. Next hand will be the last hand before reshuffling.")
@@ -108,6 +103,13 @@ def calculate_hand_value(hand):
     return sum(card_values[card][0] for card in hand) % 10
 
 def play_baccarat():
+    # Create an audio placeholder that will be updated each time a card is dealt.
+    audio_placeholder = st.empty()
+    
+    # Function to play the card mixing sound using the audio placeholder.
+    def play_dealing_sound():
+        audio_placeholder.audio("card-mixing-48088.mp3", format="audio/mp3", autoplay=True)
+
     # Set up player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
     player_cols = st.columns([1, 2, 2, 2, 1])
