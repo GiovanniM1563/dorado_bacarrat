@@ -4,6 +4,7 @@ import csv
 import html
 import base64
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 from time import sleep
 
@@ -202,7 +203,90 @@ def play_baccarat():
     st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
+def play_baccarat_manipulated():
+    # This function forces a manipulated outcome based on the key press.
+    manipulation = st.session_state.get("manipulate")
+    # Clear the manipulation flag so it only applies for one hand.
+    st.session_state.manipulate = None
+
+    # Set up Banker's hand placeholders using a five-column layout for centering.
+    st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
+    banker_cols = st.columns([1, 2, 2, 2, 1])
+    banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
+    
+    # Set up Player's hand placeholders using a five-column layout for centering.
+    st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
+    player_cols = st.columns([1, 2, 2, 2, 1])
+    player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
+    
+    if manipulation == "against_player":
+        # Force outcome: Banker wins.
+        # For example, set player's hand to total 7 and banker's hand to total 9.
+        player_hand = ["4♣", "3♣"]  # 4 + 3 = 7
+        banker_hand = ["8♠", "A♣"]  # 8 + 1 = 9
+        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
+        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
+        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
+        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
+    elif manipulation == "against_banker":
+        # Force outcome: Player wins.
+        # For example, set player's hand to total 9 and banker's hand to total 7.
+        player_hand = ["8♠", "A♣"]  # 8 + 1 = 9
+        banker_hand = ["4♣", "3♣"]  # 4 + 3 = 7
+        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
+        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
+        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
+        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
+    
+    # Calculate and display final hand values
+    player_final = calculate_hand_value(player_hand)
+    banker_final = calculate_hand_value(banker_hand)
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>Player Hand Value: {player_final}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>Banker Hand Value: {banker_final}</h3>", unsafe_allow_html=True)
+    
+    if manipulation == "against_player":
+        winner = "Banker Wins!"
+        result_color = "orange"
+    elif manipulation == "against_banker":
+        winner = "Player Wins!"
+        result_color = "blue"
+    st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
+
+# Add keyboard event listener using an HTML component.
+components.html(
+    """
+    <script>
+    document.addEventListener('keydown', function(e) {
+        if(e.key === 'j' || e.key === 'J') {
+            const input = window.parent.document.getElementById("manipulate_input");
+            if(input) { input.value = "j"; input.dispatchEvent(new Event('change')); }
+        } else if(e.key === 'k' || e.key === 'K') {
+            const input = window.parent.document.getElementById("manipulate_input");
+            if(input) { input.value = "k"; input.dispatchEvent(new Event('change')); }
+        } else if(e.key === 'l' || e.key === 'L') {
+            const input = window.parent.document.getElementById("manipulate_input");
+            if(input) { input.value = "l"; input.dispatchEvent(new Event('change')); }
+        }
+    });
+    </script>
+    """,
+    height=0,
+)
+
+# Hidden text input to capture key presses.
+manipulate = st.text_input("", key="manipulate_input", value="", label_visibility="hidden")
+if manipulate.lower() == "j":
+    st.session_state.manipulate = "against_player"
+elif manipulate.lower() == "k":
+    st.session_state.manipulate = "against_banker"
+elif manipulate.lower() == "l":
+    st.session_state.manipulate = None
+
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to El Dorado Lounge's Baccarat</h2>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
-    play_baccarat()
+    if st.session_state.get("manipulate"):
+        play_baccarat_manipulated()
+    else:
+        play_baccarat()
