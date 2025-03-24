@@ -206,6 +206,32 @@ def play_baccarat():
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
 def play_baccarat_manipulated(manipulation):
+    # Define multiple predetermined combinations.
+    # For a winning two-card hand (total 9) choose from these:
+    winning_combos = [
+        ("9♣", "J♦"),  # 9 + 0 = 9
+        ("8♠", "A♥"),  # 8 + 1 = 9
+        ("7♥", "2♣"),  # 7 + 2 = 9
+        ("6♦", "3♠"),  # 6 + 3 = 9
+        ("5♣", "4♥")   # 5 + 4 = 9
+    ]
+    # For a losing two-card hand (total 7, for example) choose from these:
+    losing_combos = [
+        ("4♣", "3♣"),  # 4 + 3 = 7
+        ("7♠", "J♣"),  # 7 + 0 = 7
+        ("6♠", "A♦")   # 6 + 1 = 7
+    ]
+    
+    # Depending on the manipulation mode, randomly pick the appropriate combination.
+    if manipulation == "Stack against Player":
+        # Banker wins: banker gets a winning combo (9), player gets a losing combo.
+        banker_hand = list(random.choice(winning_combos))
+        player_hand = list(random.choice(losing_combos))
+    elif manipulation == "Stack against Banker":
+        # Player wins: player gets a winning combo (9), banker gets a losing combo.
+        player_hand = list(random.choice(winning_combos))
+        banker_hand = list(random.choice(losing_combos))
+    
     # Set up placeholders for both hands.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
     banker_cols = st.columns([1, 2, 2, 2, 1])
@@ -214,7 +240,7 @@ def play_baccarat_manipulated(manipulation):
     player_cols = st.columns([1, 2, 2, 2, 1])
     player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
     
-    # Initially, show the backside for each card (mimicking the default game)
+    # Initially, show the card backs to mimic the default game.
     for ph in player_placeholders:
          ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
     for ph in banker_placeholders:
@@ -222,17 +248,7 @@ def play_baccarat_manipulated(manipulation):
     
     announcement = st.empty()
     
-    # Predefined cards for the manipulated outcome.
-    if manipulation == "Stack against Player":
-        # Force outcome: Banker wins.
-        player_hand = ["4♣", "3♣"]  # total = 7
-        banker_hand = ["8♠", "A♣"]   # total = 9
-    elif manipulation == "Stack against Banker":
-        # Force outcome: Player wins.
-        player_hand = ["8♠", "A♣"]  # total = 9
-        banker_hand = ["4♣", "3♣"]  # total = 7
-    
-    # Slowly reveal the predetermined cards as if dealing them
+    # Slowly reveal the predetermined cards as if dealing them.
     for i in range(2):
         ordinal = "First" if i == 0 else "Second"
         
