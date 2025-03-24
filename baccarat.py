@@ -214,6 +214,12 @@ def play_baccarat_manipulated(manipulation):
     player_cols = st.columns([1, 2, 2, 2, 1])
     player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
     
+    # Initially, show the backside for each card (mimicking the default game)
+    for ph in player_placeholders:
+         ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
+    for ph in banker_placeholders:
+         ph.image("Cards/cardBack_red4.png", use_container_width=False, width=200)
+    
     announcement = st.empty()
     
     # Predefined cards for the manipulated outcome.
@@ -231,13 +237,13 @@ def play_baccarat_manipulated(manipulation):
         ordinal = "First" if i == 0 else "Second"
         
         sleep(5)
-        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>Dealing Player's {ordinal} card... Please wait!</h2>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>Revealing Player's {ordinal} card...</h2>", unsafe_allow_html=True)
         player_placeholders[i].image(get_card_image_path(player_hand[i]), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
         
         sleep(5)
-        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>Dealing Banker's {ordinal} card... Hold tight!</h2>", unsafe_allow_html=True)
+        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>Revealing Banker's {ordinal} card...</h2>", unsafe_allow_html=True)
         banker_placeholders[i].image(get_card_image_path(banker_hand[i]), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
