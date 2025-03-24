@@ -80,8 +80,7 @@ st.sidebar.write("     - Draws if their total is 5 and the Player’s third card
 st.sidebar.write("     - Draws if their total is 6 and the Player’s third card is 6 or 7.")
 st.sidebar.write("     - Stands if they have 7 or more.")
 
-# Add a sidebar pill-style selection for game odds manipulation.
-# (Here we use a radio widget to mimic pills.)
+# Sidebar pill selection for manipulation mode.
 manipulation_mode = st.sidebar.radio(
     "Choose Game Odds:",
     options=["Default", "Stack against Player", "Stack against Banker"],
@@ -128,12 +127,11 @@ def play_baccarat():
     announcement = st.empty()
     player_hand = []
     banker_hand = []
-
-    # Deal two cards each (initial hands)
+    
+    # Slowly deal two cards each with delays
     for i in range(2):
         ordinal = "First" if i == 0 else "Second"
         
-        # Deal Player's card
         sleep(5)
         announcement.markdown(f"<h2 style='text-align: center; color: blue;'>Dealing Player's {ordinal} card... Please wait!</h2>", unsafe_allow_html=True)
         card = deal_card()
@@ -142,7 +140,6 @@ def play_baccarat():
         sleep(5)
         announcement.empty()
         
-        # Deal Banker's card
         sleep(5)
         announcement.markdown(f"<h2 style='text-align: center; color: orange;'>Dealing Banker's {ordinal} card... Hold tight!</h2>", unsafe_allow_html=True)
         card = deal_card()
@@ -151,7 +148,7 @@ def play_baccarat():
         sleep(5)
         announcement.empty()
     
-    # Check if Player draws a third card
+    # Check for third card draws following standard rules
     player_value = calculate_hand_value(player_hand)
     player_third_card = None
     if player_value < 6:
@@ -163,7 +160,6 @@ def play_baccarat():
         sleep(5)
         announcement.empty()
     
-    # Determine if Banker draws a third card
     banker_value = calculate_hand_value(banker_hand)
     draw_banker = False
     if player_third_card is None:
@@ -189,15 +185,13 @@ def play_baccarat():
         banker_placeholders[2].image(get_card_image_path(banker_third), use_container_width=False, width=200)
         sleep(5)
         announcement.empty()
-    
-    # Calculate and display final hand values
+        
     player_final = calculate_hand_value(player_hand)
     banker_final = calculate_hand_value(banker_hand)
     
     st.markdown(f"<h3 style='text-align: center; color: blue;'>Player Hand Value: {player_final}</h3>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: orange;'>Banker Hand Value: {banker_final}</h3>", unsafe_allow_html=True)
     
-    # Determine and display the final outcome
     if player_final > banker_final:
         winner = "Player Wins!"
         result_color = "blue"
@@ -212,36 +206,46 @@ def play_baccarat():
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
 def play_baccarat_manipulated(manipulation):
-    # Set up Banker's hand placeholders using a five-column layout for centering.
+    # Set up placeholders for both hands.
     st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
     banker_cols = st.columns([1, 2, 2, 2, 1])
     banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
-    
-    # Set up Player's hand placeholders using a five-column layout for centering.
     st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
     player_cols = st.columns([1, 2, 2, 2, 1])
     player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
     
+    announcement = st.empty()
+    
+    # Predefined cards for the manipulated outcome.
     if manipulation == "Stack against Player":
         # Force outcome: Banker wins.
         player_hand = ["4♣", "3♣"]  # total = 7
-        banker_hand = ["8♠", "A♣"]  # total = 9
-        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
-        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
-        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
-        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
+        banker_hand = ["8♠", "A♣"]   # total = 9
     elif manipulation == "Stack against Banker":
         # Force outcome: Player wins.
         player_hand = ["8♠", "A♣"]  # total = 9
         banker_hand = ["4♣", "3♣"]  # total = 7
-        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
-        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
-        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
-        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
     
-    # Calculate and display final hand values
+    # Slowly reveal the predetermined cards as if dealing them
+    for i in range(2):
+        ordinal = "First" if i == 0 else "Second"
+        
+        sleep(5)
+        announcement.markdown(f"<h2 style='text-align: center; color: blue;'>Dealing Player's {ordinal} card... Please wait!</h2>", unsafe_allow_html=True)
+        player_placeholders[i].image(get_card_image_path(player_hand[i]), use_container_width=False, width=200)
+        sleep(5)
+        announcement.empty()
+        
+        sleep(5)
+        announcement.markdown(f"<h2 style='text-align: center; color: orange;'>Dealing Banker's {ordinal} card... Hold tight!</h2>", unsafe_allow_html=True)
+        banker_placeholders[i].image(get_card_image_path(banker_hand[i]), use_container_width=False, width=200)
+        sleep(5)
+        announcement.empty()
+    
+    # For simplicity, no third card is drawn in manipulated mode.
     player_final = calculate_hand_value(player_hand)
     banker_final = calculate_hand_value(banker_hand)
+    
     st.markdown(f"<h3 style='text-align: center; color: blue;'>Player Hand Value: {player_final}</h3>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: orange;'>Banker Hand Value: {banker_final}</h3>", unsafe_allow_html=True)
     
@@ -251,6 +255,7 @@ def play_baccarat_manipulated(manipulation):
     elif manipulation == "Stack against Banker":
         winner = "Player Wins!"
         result_color = "blue"
+    
     st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
