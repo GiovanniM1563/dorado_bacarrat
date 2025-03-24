@@ -80,6 +80,15 @@ st.sidebar.write("     - Draws if their total is 5 and the Player’s third card
 st.sidebar.write("     - Draws if their total is 6 and the Player’s third card is 6 or 7.")
 st.sidebar.write("     - Stands if they have 7 or more.")
 
+# Add a sidebar pill-style selection for game odds manipulation.
+# (Here we use a radio widget to mimic pills.)
+manipulation_mode = st.sidebar.radio(
+    "Choose Game Odds:",
+    options=["Default", "Stack against Player", "Stack against Banker"],
+    index=0,
+    horizontal=True
+)
+
 # Initialize deck in session_state if not already present
 if "deck" not in st.session_state:
     st.session_state.deck = list(card_values.keys()) * 8
@@ -202,7 +211,53 @@ def play_baccarat():
     st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
 
+def play_baccarat_manipulated(manipulation):
+    # Set up Banker's hand placeholders using a five-column layout for centering.
+    st.markdown("<h2 style='text-align: center; color: gold;'>Banker's Hand</h2>", unsafe_allow_html=True)
+    banker_cols = st.columns([1, 2, 2, 2, 1])
+    banker_placeholders = [banker_cols[1].empty(), banker_cols[2].empty(), banker_cols[3].empty()]
+    
+    # Set up Player's hand placeholders using a five-column layout for centering.
+    st.markdown("<h2 style='text-align: center; color: gold;'>Player's Hand</h2>", unsafe_allow_html=True)
+    player_cols = st.columns([1, 2, 2, 2, 1])
+    player_placeholders = [player_cols[1].empty(), player_cols[2].empty(), player_cols[3].empty()]
+    
+    if manipulation == "Stack against Player":
+        # Force outcome: Banker wins.
+        player_hand = ["4♣", "3♣"]  # total = 7
+        banker_hand = ["8♠", "A♣"]  # total = 9
+        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
+        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
+        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
+        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
+    elif manipulation == "Stack against Banker":
+        # Force outcome: Player wins.
+        player_hand = ["8♠", "A♣"]  # total = 9
+        banker_hand = ["4♣", "3♣"]  # total = 7
+        player_placeholders[0].image(get_card_image_path(player_hand[0]), use_container_width=False, width=200)
+        player_placeholders[1].image(get_card_image_path(player_hand[1]), use_container_width=False, width=200)
+        banker_placeholders[0].image(get_card_image_path(banker_hand[0]), use_container_width=False, width=200)
+        banker_placeholders[1].image(get_card_image_path(banker_hand[1]), use_container_width=False, width=200)
+    
+    # Calculate and display final hand values
+    player_final = calculate_hand_value(player_hand)
+    banker_final = calculate_hand_value(banker_hand)
+    st.markdown(f"<h3 style='text-align: center; color: blue;'>Player Hand Value: {player_final}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: orange;'>Banker Hand Value: {banker_final}</h3>", unsafe_allow_html=True)
+    
+    if manipulation == "Stack against Player":
+        winner = "Banker Wins!"
+        result_color = "orange"
+    elif manipulation == "Stack against Banker":
+        winner = "Player Wins!"
+        result_color = "blue"
+    st.markdown("<h2 style='text-align: center; color: gold;'>Final Outcome</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color:{result_color}; text-shadow: 2px 2px 4px black;'>🎉 {winner} 🎉</h1>", unsafe_allow_html=True)
+
 # Main Page Deal Button
 st.markdown("<h2 style='text-align: center; color: gold;'>Welcome to El Dorado Lounge's Baccarat</h2>", unsafe_allow_html=True)
 if st.button("🎴 Deal Baccarat Hand 🎲", key="main_deal_button"):
-    play_baccarat()
+    if manipulation_mode == "Default":
+        play_baccarat()
+    else:
+        play_baccarat_manipulated(manipulation_mode)
